@@ -1,0 +1,1 @@
+pyuic5 -o DrawAndGuessUi.py -x DrawAndGuessUi.ui

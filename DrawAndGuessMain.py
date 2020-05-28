@@ -6,23 +6,59 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
+import random
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import DrawAndGuessUi
 
 class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
     def signal(self, Form):
-        pass
+        self.randomWord_button.clicked.connect(self.randomWord)
+        self.confirmWord_button.clicked.connect(self.confirmWord)
+    
+    def initSystem(self):
+        fileName = "词库.txt"
+        self.loadWord(fileName)
+        self.click_random = 0
+        
+    def loadWord(self, fileName):
+        f = open(fileName, 'r')
+        lines = f.readlines()
+        self.word_list = []
+        for l in lines:
+            self.word_list.append(l.strip())
+
+    def randomWord(self):
+        self.click_random += 1
+        if (self.click_random >= 3):
+            print("You cannot change words again")
+            return
+        for i in range(4):
+            random.shuffle(self.word_list)
+            item = self.word_list.pop(0)
+            while (item == ""):
+                random.shuffle(self.word_list)
+                item = self.word_list.pop(0)
+            eval("self.word{}_radioButton".format(i+1)).setText(item)
+
+    def confirmWord(self):
+        self.click_random = 0
+        for i in range(4):
+            button = eval("self.word{}_radioButton".format(i+1))
+            if button.isChecked():
+                self.current_word = button.text()
+                print(self.current_word)
+            button.setText("")
 
 if __name__ == "__main__":    
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = DAG_UI()
+    ui.setupUi(Form)
+    ui.initSystem()
     #ui.init_box(Form)
     #ui.init_thread()
-    #ui.signal(Form)
-    ui.setupUi(Form)
+    ui.signal(Form)
     Form.show()
     sys.exit(app.exec_())

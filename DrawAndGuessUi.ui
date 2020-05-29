@@ -121,7 +121,7 @@ p, li { white-space: pre-wrap; }
     <string/>
    </property>
   </widget>
-  <widget class="QProgressBar" name="progressBar">
+  <widget class="QProgressBar" name="time_progressBar">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -130,8 +130,14 @@ p, li { white-space: pre-wrap; }
      <height>21</height>
     </rect>
    </property>
+   <property name="maximum">
+    <number>90</number>
+   </property>
    <property name="value">
     <number>24</number>
+   </property>
+   <property name="format">
+    <string>%v</string>
    </property>
   </widget>
   <widget class="QTextEdit" name="textEdit">

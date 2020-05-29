@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 import random
+import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import DrawAndGuessUi
@@ -49,6 +50,13 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
                 self.current_word = button.text()
                 print(self.current_word)
             button.setText("")
+        self.count_down = 90
+    
+    def countDown(self):
+        while (self.count_down):
+            self.time_progressBar.setProperty("value", (90-self.count_down))
+            self.count_down -= 1
+            time.sleep(1)
 
 if __name__ == "__main__":    
     import sys

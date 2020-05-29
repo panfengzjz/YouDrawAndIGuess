@@ -42,10 +42,11 @@ class Ui_Form(object):
         self.word3_radioButton.setGeometry(QtCore.QRect(40, 150, 111, 16))
         self.word3_radioButton.setText("")
         self.word3_radioButton.setObjectName("word3_radioButton")
-        self.progressBar = QtWidgets.QProgressBar(Form)
-        self.progressBar.setGeometry(QtCore.QRect(20, 250, 161, 21))
-        self.progressBar.setProperty("value", 24)
-        self.progressBar.setObjectName("progressBar")
+        self.time_progressBar = QtWidgets.QProgressBar(Form)
+        self.time_progressBar.setGeometry(QtCore.QRect(20, 250, 161, 21))
+        self.time_progressBar.setMaximum(90)
+        self.time_progressBar.setProperty("value", 24)
+        self.time_progressBar.setObjectName("time_progressBar")
         self.textEdit = QtWidgets.QTextEdit(Form)
         self.textEdit.setGeometry(QtCore.QRect(180, 250, 41, 31))
         self.textEdit.setObjectName("textEdit")
@@ -64,6 +65,7 @@ class Ui_Form(object):
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:20pt; font-weight:600;\">你画我猜</span></p></body></html>"))
         self.start_Button.setText(_translate("Form", "开始游戏"))
+        self.time_progressBar.setFormat(_translate("Form", "%v"))
 
 
 if __name__ == "__main__":

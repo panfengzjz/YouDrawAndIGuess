@@ -8,19 +8,35 @@
 
 import random
 import time
+import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import DrawAndGuessUi
 
 class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
+    _time_signal = QtCore.pyqtSignal()
     def signal(self, Form):
         self.randomWord_button.clicked.connect(self.randomWord)
         self.confirmWord_button.clicked.connect(self.confirmWord)
+        self.start_Button.clicked.connect(self.resetGame)
+        self._time_signal.connect(self.changeTimeBar)
     
     def initSystem(self):
+        self.game_time = 10
         fileName = "词库.txt"
         self.loadWord(fileName)
+        self.time_progressBar.setProperty("value", 0)
         self.click_random = 0
+        self.count_down = self.game_time
+    
+    def resetGame(self):
+        self.randomWord_button.setEnabled(True)
+        self.confirmWord_button.setEnabled(True)
+        #猜出答案就提前结束
+        self.pause()
+        self.count_down = self.game_time
+        #重置 progressBar
+        self._time_signal.emit()
         
     def loadWord(self, fileName):
         f = open(fileName, 'r')
@@ -45,18 +61,47 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
     def confirmWord(self):
         self.click_random = 0
         for i in range(4):
+            #清空词汇格中的备选项
             button = eval("self.word{}_radioButton".format(i+1))
             if button.isChecked():
                 self.current_word = button.text()
                 print(self.current_word)
             button.setText("")
-        self.count_down = 90
+        self.count_down = self.game_time
+        #游戏中这两个按键的功能应该无效
+        self.randomWord_button.setEnabled(False)
+        self.confirmWord_button.setEnabled(False)
+        self.resume()
     
-    def countDown(self):
+    def countDownSingal(self):
         while (self.count_down):
-            self.time_progressBar.setProperty("value", (90-self.count_down))
+            self.__flag.wait()
+            self._time_signal.emit()
             self.count_down -= 1
             time.sleep(1)
+    
+    def changeTimeBar(self):
+        self.time_progressBar.setProperty("value", (90-self.count_down))
+
+    def init_thread(self):
+        self.t = threading.Thread(target=self.countDownSingal)
+        self.__flag = threading.Event()
+        self.__flag.set()
+        self.__running = threading.Event()
+        self.__running.set()
+        self.t.setDaemon(True)
+        self.t.start()
+        self.pause()
+
+    def pause(self):
+        self.__flag.clear()     # 设置为False, 让线程阻塞
+
+    def resume(self):
+        self.__flag.set()    # 设置为True, 让线程停止阻塞
+
+    def stop(self):
+        self.__flag.set()       # 将线程从暂停状态恢复, 如何已经暂停的话
+        self.__running.clear()  # 设置为False
 
 if __name__ == "__main__":    
     import sys
@@ -65,8 +110,7 @@ if __name__ == "__main__":
     ui = DAG_UI()
     ui.setupUi(Form)
     ui.initSystem()
-    #ui.init_box(Form)
-    #ui.init_thread()
+    ui.init_thread()
     ui.signal(Form)
     Form.show()
     sys.exit(app.exec_())

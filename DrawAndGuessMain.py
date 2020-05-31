@@ -22,21 +22,24 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
         self._time_signal.connect(self.changeTimeBar)
     
     def initSystem(self):
-        self.game_time = 10
+        self.game_time = 90
+        self.select_time = 30
         fileName = "词库.txt"
         self.loadWord(fileName)
         self.time_progressBar.setProperty("value", 0)
         self.click_random = 0
-        self.count_down = self.game_time
+        self.count_down = self.select_time
     
     def resetGame(self):
         self.randomWord_button.setEnabled(True)
         self.confirmWord_button.setEnabled(True)
         #猜出答案就提前结束
         self.pause()
-        self.count_down = self.game_time
+        self.count_down = self.select_time
+        self.randomWord()
         #重置 progressBar
         self._time_signal.emit()
+        self.resume()
         
     def loadWord(self, fileName):
         f = open(fileName, 'r')
@@ -68,20 +71,22 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
                 print(self.current_word)
             button.setText("")
         self.count_down = self.game_time
+        self._time_signal.emit()
         #游戏中这两个按键的功能应该无效
         self.randomWord_button.setEnabled(False)
         self.confirmWord_button.setEnabled(False)
-        self.resume()
     
     def countDownSingal(self):
-        while (self.count_down):
-            self.__flag.wait()
-            self._time_signal.emit()
-            self.count_down -= 1
-            time.sleep(1)
+        while self.__running.isSet():
+            self.__flag.wait()        
+            while (self.count_down):
+                self.__flag.wait()
+                self._time_signal.emit()
+                self.count_down -= 1
+                time.sleep(1)
     
     def changeTimeBar(self):
-        self.time_progressBar.setProperty("value", (90-self.count_down))
+        self.time_progressBar.setProperty("value", (self.count_down))
 
     def init_thread(self):
         self.t = threading.Thread(target=self.countDownSingal)

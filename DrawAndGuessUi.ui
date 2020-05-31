@@ -126,7 +126,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>20</x>
      <y>250</y>
-     <width>161</width>
+     <width>151</width>
      <height>21</height>
     </rect>
    </property>
@@ -137,17 +137,34 @@ p, li { white-space: pre-wrap; }
     <number>24</number>
    </property>
    <property name="format">
-    <string>%v</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QLineEdit" name="lineEdit">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>250</y>
-     <width>41</width>
-     <height>31</height>
+     <x>150</x>
+     <y>240</y>
+     <width>71</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="cursorPosition">
+    <number>1</number>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

@@ -43,13 +43,22 @@ class Ui_Form(object):
         self.word3_radioButton.setText("")
         self.word3_radioButton.setObjectName("word3_radioButton")
         self.time_progressBar = QtWidgets.QProgressBar(Form)
-        self.time_progressBar.setGeometry(QtCore.QRect(20, 250, 161, 21))
+        self.time_progressBar.setGeometry(QtCore.QRect(20, 250, 151, 21))
         self.time_progressBar.setMaximum(90)
         self.time_progressBar.setProperty("value", 24)
+        self.time_progressBar.setFormat("")
         self.time_progressBar.setObjectName("time_progressBar")
-        self.textEdit = QtWidgets.QTextEdit(Form)
-        self.textEdit.setGeometry(QtCore.QRect(180, 250, 41, 31))
-        self.textEdit.setObjectName("textEdit")
+        self.lineEdit = QtWidgets.QLineEdit(Form)
+        self.lineEdit.setGeometry(QtCore.QRect(150, 240, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lineEdit.setFont(font)
+        self.lineEdit.setCursorPosition(1)
+        self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.lineEdit.setObjectName("lineEdit")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -65,7 +74,7 @@ class Ui_Form(object):
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:20pt; font-weight:600;\">你画我猜</span></p></body></html>"))
         self.start_Button.setText(_translate("Form", "开始游戏"))
-        self.time_progressBar.setFormat(_translate("Form", "%v"))
+        self.lineEdit.setText(_translate("Form", "0"))
 
 
 if __name__ == "__main__":

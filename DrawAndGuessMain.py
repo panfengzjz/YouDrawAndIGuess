@@ -23,19 +23,20 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
     
     def initSystem(self):
         self.game_time = 90
-        self.select_time = 30
+        self.doing_select = True
         fileName = "词库.txt"
         self.loadWord(fileName)
         self.time_progressBar.setProperty("value", 0)
         self.click_random = 0
-        self.count_down = self.select_time
+        self.count_down = self.game_time
     
     def resetGame(self):
         self.randomWord_button.setEnabled(True)
         self.confirmWord_button.setEnabled(True)
         #猜出答案就提前结束
         self.pause()
-        self.count_down = self.select_time
+        self.doing_select = True
+        self.count_down = self.game_time
         self.randomWord()
         #重置 progressBar
         self._time_signal.emit()
@@ -63,6 +64,7 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
 
     def confirmWord(self):
         self.click_random = 0
+        self.doing_select = False
         for i in range(4):
             #清空词汇格中的备选项
             button = eval("self.word{}_radioButton".format(i+1))
@@ -82,11 +84,19 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
             while (self.count_down):
                 self.__flag.wait()
                 self._time_signal.emit()
-                self.count_down -= 1
+                if self.doing_select:
+                    self.count_down -= 3
+                else:
+                    self.count_down -= 1
                 time.sleep(1)
     
     def changeTimeBar(self):
-        self.time_progressBar.setProperty("value", (self.count_down))
+        _translate = QtCore.QCoreApplication.translate
+        self.time_progressBar.setProperty("value", (90-self.count_down))
+        if (self.doing_select):
+            self.lineEdit.setText(_translate("Form", str(self.count_down//3)))
+        else:
+            self.lineEdit.setText(_translate("Form", str(self.count_down)))
 
     def init_thread(self):
         self.t = threading.Thread(target=self.countDownSingal)

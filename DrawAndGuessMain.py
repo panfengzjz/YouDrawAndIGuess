@@ -54,13 +54,15 @@ class DAG_UI(DrawAndGuessUi.Ui_Form, QtCore.QObject):
         if (self.click_random >= 3):
             print("You cannot change words again")
             return
+        prev_item_list = []
         for i in range(4):
             random.shuffle(self.word_list)
             item = self.word_list.pop(0)
-            while (item == ""):
+            while (item == "" or (item in prev_item_list)):
                 random.shuffle(self.word_list)
                 item = self.word_list.pop(0)
             eval("self.word{}_radioButton".format(i+1)).setText(item)
+            prev_item_list.append(item)
 
     def confirmWord(self):
         self.click_random = 0
